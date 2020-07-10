@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+  - name: Get hostname
+    command: hostname
+  - name: Create a config file
+    command: touch {{ configfile_name }}.txt
+

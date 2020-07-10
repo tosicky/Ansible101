@@ -1,0 +1,18 @@
+---
+- hosts: all
+  tasks:
+  - name: Get host fstab information
+    command: cat /etc/fstab
+    register: fstab_result
+  - name: Save fstab result to a file
+    copy:
+      content: "{{ fstab_result.stdout }}"
+      dest: "~/{{ configfile_name }}.txt"
+    when: configfile_name is defined
+
+  - name: Copy inventory from remote
+    fetch:
+      src: "~/{{ configfile_name }}.txt"
+      dest: "~/inventories/{{ inventory_hostname }}/"
+      flat: yes
+    when: configfile_name is defined
