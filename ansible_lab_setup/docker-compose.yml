@@ -1,0 +1,61 @@
+version: '3'
+services:
+    baseImage:
+        build: ./base_image/
+        image: ubuntu_base
+    control:
+        links:
+          - baseImage
+        build: ./control/
+        image: ansible_control
+        container_name: ansible_master
+        hostname: ansible_master
+        command: ["/usr/sbin/sshd","-D"]
+        volumes:
+            - ansible_vol:/var/ansible
+    ansible_host1:
+        links:
+            - baseImage
+            - control
+        build: ./ansible_host/
+        image: ansible_host
+        container_name: ansible_host1
+        hostname: ansible_host1
+        command: ["/var/run.sh"]
+        volumes:
+          - ansible_vol:/var/ansible
+    ansible_host2:
+        links:
+            - baseImage
+            - control
+            - ansible_host1
+        image: ansible_host
+        container_name: ansible_host2
+        hostname: ansible_host2
+        command: ["/var/run.sh"]
+        volumes:
+          - ansible_vol:/var/ansible
+    ansible_host3:
+        links:
+            - baseImage
+            - control
+            - ansible_host2
+        image: ansible_host
+        container_name: ansible_host3
+        hostname: ansible_host3
+        command: ["/var/run.sh"]
+        volumes:
+          - ansible_vol:/var/ansible
+    ansible_host4:
+        links:
+            - baseImage
+            - control
+            - ansible_host3
+        image: ansible_host
+        container_name: ansible_host4
+        hostname: ansible_host4
+        command: ["/var/run.sh"]
+        volumes:
+          - ansible_vol:/var/ansible
+volumes:
+    ansible_vol:
