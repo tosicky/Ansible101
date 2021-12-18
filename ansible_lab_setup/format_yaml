@@ -1,0 +1,5 @@
+import yaml
+
+format_yml = yaml.load(open('first.yml').read())
+
+pprint(format_yml)
